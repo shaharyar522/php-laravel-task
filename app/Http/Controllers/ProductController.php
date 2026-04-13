@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-     public function index()
+        public function index()
     {
         return response()->json(Product::latest()->paginate(10));
     }
@@ -19,9 +19,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
         ]);
 
-        $product = Product::create($request->all());
-
-        return response()->json($product);
+        return Product::create($request->all());
     }
 
     public function destroy($id)
