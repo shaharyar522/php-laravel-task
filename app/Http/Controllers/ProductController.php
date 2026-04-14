@@ -1,30 +1,55 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 
+
 class ProductController extends Controller
 {
-        public function index()
+    public function index()
     {
-        return response()->json(Product::latest()->paginate(10));
+        $products = Product::latest()->paginate(10);
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request)  
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string'
         ]);
 
-        return Product::create($request->all());
+        $product = Product::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product created successfully',
+            'data' => $product
+        ], 201);
     }
 
     public function destroy($id)
     {
-        Product::findOrFail($id)->delete();
-        return response()->json(['message' => 'Deleted']);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $product->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Product deleted successfully'
+        ]);
     }
 }
