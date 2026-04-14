@@ -79,14 +79,14 @@ class TaskController extends Controller
     {
         // Bonus: Implement retry logic
         $response = Http::withHeaders([
-            'User-Agent' => 'AntigravityDev/1.0',
+            'User-Agent' => 'My_php_laravel_task/1.0',
             'Accept' => 'application/json'
         ])->retry(3, 100)->get('https://jsonplaceholder.typicode.com/posts/1');
 
         return response()->json([
             'status' => $response->status(),
             'headers' => [
-                'User-Agent' => 'AntigravityDev/1.0',
+                'User-Agent' => 'My_php_laravel_task/1.0',
                 'Accept' => 'application/json'
             ],
             'response' => $response->json()
